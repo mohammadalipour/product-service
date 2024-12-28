@@ -30,7 +30,7 @@ services:
     container_name: product-service-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: product_service
+      MYSQL_DATABASE: products
       MYSQL_USER: product_user
       MYSQL_PASSWORD: product_password
     ports:
