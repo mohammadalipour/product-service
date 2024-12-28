@@ -1,10 +1,10 @@
 services:
   product-service:
     build:
-      context: .
+      context: ./product-service
       dockerfile: Dockerfile
     volumes:
-    - ./product-service:/var/www/html
+      - ./product-service:/var/www/html
     ports:
       - "9001:9000"
     networks:
