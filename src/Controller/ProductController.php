@@ -8,18 +8,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends AbstractController
 {
-    public function __construct()
+    #[Route('/api/v1/products/{id}', methods: ['GET'])]
+    public function index(ProductRepository $productRepository, int $id): JsonResponse
     {
+        $product = $productRepository->find($id);
+
+        if (!$product) {
+            return new JsonResponse(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $response = [
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'price' => $product->getPrice(),
+            'description' => $product->getDescription(),
+            'image' => $product->getImage(),
+        ];
+
+        return new JsonResponse($response);
     }
 
     #[Route('/api/v1/products', methods: ['GET'])]
-    public function index(ProductRepository $productRepository, Request $request): JsonResponse
+    public function list(ProductRepository $productRepository, Request $request): JsonResponse
     {
         $page = (int) $request->query->get('page', 1);
-        $itemsPerPage = (int) $request->query->get('itemsPerPage', 10);
+        $itemsPerPage = (int) $request->query->get('itemsPerPage', 5);
 
         $offset = ($page - 1) * $itemsPerPage;
 
