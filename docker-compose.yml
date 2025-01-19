@@ -9,6 +9,8 @@ services:
       - "9001:9000"
     networks:
       - ecommerce-network
+    env_file:
+      - ./product-service/.env
     depends_on:
       - product-db
     command: ["php-fpm"]
