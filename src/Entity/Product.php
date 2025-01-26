@@ -2,38 +2,48 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\ProductRepository')]
+#[ORM\Entity]
 #[ORM\Table(name: 'products')]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
+    private ?string $name;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $image; // Add image field
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?float $price;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private float $price;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $image;
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    private bool $enabled = true;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTime $createdAt;
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $createdAt;
 
-    // Getters and Setters
-    public function getId(): ?int
+    private ?EventDispatcherInterface $eventDispatcher = null;
+
+    public function __construct()
     {
-        return $this->id;
+        $this->createdAt = new \DateTime();
     }
-
-    public function getName(): string
+    // Getter and Setter for 'name'
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -44,18 +54,13 @@ class Product
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getId(): int
     {
-        return $this->description;
+        return $this->id;
     }
 
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getPrice(): float
+    // Getter and Setter for 'price'
+    public function getPrice(): ?float
     {
         return $this->price;
     }
@@ -66,25 +71,48 @@ class Product
         return $this;
     }
 
+    // Getter and Setter for 'image'
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(string $image): self
     {
         $this->image = $image;
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getDescription(): ?string
     {
-        return $this->createdAt;
+        return $this->description;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setDescription(string $description): self
     {
-        $this->createdAt = $createdAt;
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
         return $this;
     }
 }

@@ -13,7 +13,9 @@ services:
       - ./product-service/.env
     depends_on:
       - product-db
-    command: ["php-fpm"]
+    entrypoint: [ "/bin/bash", "docker/start.sh" ]
+    command: [ "php-fpm" ]
+
 
   product-nginx:
     image: nginx:latest
