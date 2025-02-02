@@ -8,7 +8,7 @@ use Doctrine\ORM\Events;
 use Enqueue\Client\ProducerInterface;
 
 #[AsEntityListener(event: Events::postRemove, method: 'postRemove', entity: Product::class)]
-readonly class RemoveProductEventListener
+class RemoveProductEventListener
 {
     const PRODUCT_REMOVED_EVENT = 'product_removed';
     const INVENTORY_SERVICE = 'inventory-service';
@@ -18,7 +18,7 @@ readonly class RemoveProductEventListener
         self::SHOPPING_SERVICE
     ];
 
-    public function __construct(private ProducerInterface $producer)
+    public function __construct()
     {
     }
 

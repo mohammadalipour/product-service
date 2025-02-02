@@ -32,6 +32,10 @@ class Category
      */
     private $products;
 
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isDeleted = false;
+
     #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private $createdAt;
 
@@ -72,6 +76,22 @@ class Category
     public function setParent(?self $parent): self
     {
         $this->parent = $parent;
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setSoftDeleted(bool $deleted): self
+    {
+        $this->isDeleted = $deleted;
         return $this;
     }
 
