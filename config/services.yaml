@@ -1,8 +1,8 @@
-parameters:
 services:
     _defaults:
         autowire: true
         autoconfigure: true
+
     App\:
         resource: '../src/'
         exclude:
@@ -10,3 +10,14 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    messenger.transport.json_serializer:
+        class: Symfony\Component\Messenger\Transport\Serialization\Serializer
+        arguments:
+            - '@serializer'
+            - 'json'
+
+    Symfony\Component\Messenger\Transport\Serialization\Normalizer\EnvelopeNormalizer: ~
+    Symfony\Component\Messenger\Transport\Serialization\Normalizer\BusNameStampNormalizer: ~
+    Symfony\Component\Messenger\Transport\Serialization\Normalizer\StampInterfaceNormalizer: ~
+    Symfony\Component\Messenger\Transport\Serialization\Normalizer\TransportMessageNormalizer: ~
+    Symfony\Component\Messenger\Transport\Serialization\Normalizer\StampNormalizer: ~

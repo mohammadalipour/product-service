@@ -33,6 +33,9 @@ class Product
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $enabled = true;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isDeleted = false;
+
     #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private $createdAt;
 
@@ -113,6 +116,17 @@ class Product
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+        return $this;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setSoftDeleted(bool $deleted): self
+    {
+        $this->isDeleted = $deleted;
         return $this;
     }
 }

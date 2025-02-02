@@ -8,7 +8,7 @@ use Doctrine\ORM\Events;
 use Enqueue\Client\ProducerInterface;
 
 #[AsEntityListener(event: Events::postUpdate, method: 'postUpdate', entity: Product::class)]
-readonly class UpdateProductEventListener
+class UpdateProductEventListener
 {
     const PRODUCT_UPDATED_EVENT = 'product_updated';
     const INVENTORY_SERVICE = 'inventory-service';
@@ -18,13 +18,13 @@ readonly class UpdateProductEventListener
         self::SHOPPING_SERVICE
     ];
 
-    public function __construct(private ProducerInterface $producer)
+    public function __construct()
     {
     }
 
     public function PostUpdate(Product $product): void
     {
-        $productDataEvent = ['data' => ['id' => $product->getId(), 'enabled' => $product->isEnabled()]];
+        $productDataEvent = ['data' => ['id' => $product->getId(), 'enabled' => $product->isEnabled(), 'is_deleted'=> $product->isDeleted()]];
 
         foreach (self::RECEIVER_TOPICS as $topic) {
             $this->producer->sendEvent("$topic-" . self::PRODUCT_UPDATED_EVENT, $productDataEvent);
